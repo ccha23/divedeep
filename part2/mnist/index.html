@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+  </head>
+  <body>
+  <div style="text-align: center;">
+    <canvas id="sketchpad" style="border-style:solid;"></canvas>
+    <br>
+    <button onclick="sketchpad.undo()">undo</button>
+    <button onclick="sketchpad.redo()">redo</button>
+    <button onclick="sketchpad.clear()">clear</button>
+    <button onclick="predict()">predict</button><br>
+    <input oninput="sketchpad.penSize=self.val()" id="size-picker" type="range" min="1" max="50">
+    <br>
+    <div style="display: flex; justify-content: center;">
+      <canvas id="input" width="28" height="28"></canvas>
+      <p id="result"></p>
+    </div>
+  </div>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.11.1/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sketchpad@0.1.0/scripts/sketchpad.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
+    <script>
+        const context = document.querySelector("#input").getContext('2d');
+        const sketchpad = new Sketchpad({
+          element: '#sketchpad',
+          width: 280,
+          height: 280
+        });
+        sketchpad.penSize = 25;
+        $('#size-picker').val(sketchpad.penSize);
+        $('#size-picker').change(function (event) {sketchpad.penSize = $(event.target).val()});
+        
+        let model;
+        addEventListener('DOMContentLoaded', (async function () {
+            model = await tf.loadLayersModel('model/model.json');
+        }));
+
+        function predict() {
+            var img = new Image();
+            img.onload = async function() {
+                context.clearRect(0, 0, 28, 28);
+                context.drawImage(img, 0, 0, 28, 28);
+                data = context.getImageData(0, 0, 28, 28).data;
+                var input = [];
+                for(var i = 0; i < data.length; i += 4) {
+                    input.push(data[i + 3] / 255);
+                }
+                scores = await model.predict(tf.tensor(input).reshape([1, 28, 28, 1])).array();
+                scores = scores[0];
+                $('#result').text('is classified as ' + scores.indexOf(Math.max(...scores)) + '.');
+            };
+            img.src = sketchpad.canvas.toDataURL('image/png');
+        }
+    </script>
+  </body>
+</html>
