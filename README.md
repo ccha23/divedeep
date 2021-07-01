@@ -8,7 +8,7 @@ This is the repo for the student version of the DIVE Deep workshop notebooks.
   - Install [docker](
 https://docs.docker.com/get-started/#download-and-install-docker).
   - Build the docker image, e.g., by the command
-  ```docker built -t divedeep:latest https://github.com/ccha23/divedeep.git```
+  ```docker build -t divedeep:latest https://github.com/ccha23/divedeep.git```
   - Run the docker image by the command, e.g., by the command
-  ```docker run -p 10000:8888 -e JUPYTER_ENABLE_LAB=yes divedeep:latest
-  - Access the notebooks at http://localhost:10000/
+  ```docker run -p 10000:8888 -e JUPYTER_ENABLE_LAB=yes divedeep:latest start-notebook.sh --NotebookApp.token=''```
+  - Access the notebooks at <http://localhost:10000>
