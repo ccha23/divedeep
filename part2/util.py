@@ -1,6 +1,6 @@
 import tensorflow_datasets as tfds
 import tensorflow.compat.v2 as tf
-import os, datetime, pytz
+import os, datetime, pytz, tqdm.keras
 import tensorboard as tb
 import numpy as np
 import tensorflow.compat.v2 as tf
@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 from matplotlib_inline.backend_inline import set_matplotlib_formats
 set_matplotlib_formats('svg')
 
+
+os. environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 user_home = os.getenv("HOME")  # get user home directory
 data_dir = os.path.join(user_home, "data")  # download folder for data
 
@@ -21,6 +23,7 @@ ds, ds_info = tfds.load(
     as_supervised=True,  # separate input features and label
     with_info=True,  # return information of the dataset
 )
+
 
 def normalize_mnist(ds):
     """
@@ -43,6 +46,7 @@ def normalize_mnist(ds):
 
 ds_n = normalize_mnist(ds)
 
+
 def batch_mnist(ds_n):
     ds_b = dict.fromkeys(ds_n.keys())  # initialize the batched dataset
     for part in ds_n.keys():
@@ -59,6 +63,7 @@ def batch_mnist(ds_n):
 
 
 ds_b = batch_mnist(ds_n)
+
 
 def create_simple_model():
     tf.keras.backend.clear_session() # clear keras cache. 
@@ -84,9 +89,6 @@ def compile_model(model):
 
 compile_model(model)
 
-
-import tqdm.keras
-import os, datetime, pytz
 
 fit_params = {'epochs': 6, 'callbacks': [tqdm.keras.TqdmCallback()], 'verbose': 0}
 log_root = os.path.join(user_home, "log")  # log folder
