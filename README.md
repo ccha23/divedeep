@@ -24,6 +24,7 @@ https://docs.docker.com/get-started/#download-and-install-docker).
 
 3. Pull the notebooks from this repo in a web browser:  
     > <http://localhost:10000/git-pull?repo=https%3A%2F%2Fgithub.com%2Fccha23%2Fdivedeep&urlpath=lab%2Ftree%2Fdivedeep%2Fdivedeep.ipynb&branch=master>
-  You can work on the notebooks under the `divedeep` subfolder. If you visit the link again, it will automatically pull and merge changes from the repo without overwriting your changes.
+
+    You can work on the notebooks under the `divedeep` subfolder. If you visit the link again, it will automatically pull and merge changes from the repo without overwriting your changes.
 
 4. To finish, stop the notebook server by pressing `Control-C` in the terminal that runs the docker. If you want to restart, simply run the docker command again from the same working directory. Your files should still be under the `divedeep` subfolder.
