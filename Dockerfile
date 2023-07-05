@@ -1,3 +1,3 @@
-FROM chungc/nobf:divedeep
+FROM chungc/deepnb:divedeep
 
 COPY --chown=jovyan:users . /home/jovyan
