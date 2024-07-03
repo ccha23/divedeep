@@ -1,19 +1,20 @@
 import tensorflow_datasets as tfds
 import tensorflow.compat.v2 as tf
-import os, datetime, pytz, tqdm.keras
+import tensorflow_datasets as tfjs
+import os, datetime, pytz
+from tqdm.keras import TqdmCallback
 import tensorboard as tb
 import numpy as np
 import tensorflow.compat.v2 as tf
-from matplotlib import pyplot as plt
 import numpy as np
 from IPython import display
 import matplotlib.pyplot as plt
-# produce vector inline graphics
-from matplotlib_inline.backend_inline import set_matplotlib_formats
-set_matplotlib_formats('svg')
 
 
-os. environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+# set the jupyter service prefix to access jupyter-www and tensorboard
+JUPYTER_SERVICE_PREFIX = os.environ["JUPYTERHUB_SERVICE_PREFIX"] or "/"
+os.environ["TENSORBOARD_PROXY_URL"] = JUPYTER_SERVICE_PREFIX + "proxy/%PORT%/"
+
 user_home = os.getenv("HOME")  # get user home directory
 data_dir = os.path.join(user_home, "data")  # download folder for data
 
@@ -69,7 +70,8 @@ def create_simple_model():
     tf.keras.backend.clear_session() # clear keras cache. 
                         # See https://github.com/keras-team/keras/issues/7294
     model = tf.keras.models.Sequential([
-        tf.keras.layers.Flatten(input_shape=(28, 28, 1)),
+        tf.keras.layers.Input(shape=(28, 28, 1)),
+        tf.keras.layers.Flatten(),
         tf.keras.layers.Dense(16, activation=tf.keras.activations.relu),
         tf.keras.layers.Dense(16, activation=tf.keras.activations.relu),
         tf.keras.layers.Dense(10, activation=tf.keras.activations.softmax)
@@ -90,7 +92,6 @@ def compile_model(model):
 compile_model(model)
 
 
-fit_params = {'epochs': 6, 'callbacks': [tqdm.keras.TqdmCallback()], 'verbose': 0}
 log_root = os.path.join(user_home, "log")  # log folder
 save_log_params = {'update_freq': 100, 'histogram_freq': 1}
 save_model_params = {'save_weights_only': True, 'verbose': 1}
