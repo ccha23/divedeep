@@ -9,7 +9,28 @@ import tensorflow.compat.v2 as tf
 import numpy as np
 from IPython import display
 import matplotlib.pyplot as plt
+import subprocess, time
 
+
+# Function to start ollama serve and return the Popen object if successful
+def start_ollama_serve(timeout=0.1):
+    # Start ollama serve in the background
+    proc = subprocess.Popen(
+        ["ollama", "serve"], stderr=subprocess.PIPE, start_new_session=True
+    )
+
+    # Wait a bit for the service to initialize
+    time.sleep(timeout)
+
+    # Check if the process has started successfully
+    if proc.poll() is None:  # None means the process is still running
+        print("ollama serve started successfully.")
+        return proc
+    else:
+        error_output = proc.stderr.read().decode("utf-8").strip()
+        print(
+            f"The command 'ollama serve' exited prematurely with exit code {proc.returncode}: {error_output}"
+        )
 
 # set the jupyter service prefix to access jupyter-www and tensorboard
 JUPYTER_SERVICE_PREFIX = os.environ["JUPYTERHUB_SERVICE_PREFIX"] or "/"
