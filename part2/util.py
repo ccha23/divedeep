@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import subprocess, time
 
 # set the jupyter service prefix to access jupyter-www and tensorboard
-JUPYTER_SERVICE_PREFIX = os.environ["JUPYTERHUB_SERVICE_PREFIX"] or "/"
+JUPYTER_SERVICE_PREFIX = os.getenv("JUPYTERHUB_SERVICE_PREFIX") or "/"
 os.environ["TENSORBOARD_PROXY_URL"] = JUPYTER_SERVICE_PREFIX + "proxy/%PORT%/"
 
 user_home = os.getenv("HOME")  # get user home directory
