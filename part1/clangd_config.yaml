@@ -1,0 +1,15 @@
+# .clangd
+
+# For all *.ipynb files, add compile flags and includes from /opt/conda/clang
+If:
+  PathMatch: ".*\\.(ipynb|cpp|cxx|cc|C|h|hh|hpp|hxx)$"
+CompileFlags:
+  Add: [
+    "-std=gnu++20",
+    "-stdlib=libc++",
+    "-x",
+    "c++"
+  ]
+
+# Optionally, you can add other global flags here if needed
+
